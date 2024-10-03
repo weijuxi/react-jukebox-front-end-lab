@@ -25,4 +25,30 @@ async function create(track) {
     }
 }
 
-export { index, create };
+async function update(track, trackId) {
+    try {
+        const response = await fetch(`${BASE_URL}/${trackId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(track),
+        });
+        return response.json();
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function deleteTrack(trackId) {
+    try {
+        const response = await fetch(`${BASE_URL}/${trackId}`, {
+            method: 'DELETE',
+        });
+        return response.json();
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export { index, create , update, deleteTrack };

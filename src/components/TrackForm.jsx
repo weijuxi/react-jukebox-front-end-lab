@@ -1,10 +1,11 @@
 import { useState } from 'react';
 
 export default function TrackForm(props) {
-    const [formData, setFormData] = useState({
-        title: '',
-        artist: ''
-    });
+    const initialState = {
+            title: '',
+            artist: ''
+    };
+    const [formData, setFormData] = useState(props.track ? props.track : initialState);
 
     function handleChange(e) {
         setFormData({
@@ -15,31 +16,31 @@ export default function TrackForm(props) {
 
     function handleSubmit(e) {
         e.preventDefault();
-        props.createTrack(formData);
-        setFormData({
-            title: '',
-            artist: ''
-        });
+        if (props.track) {
+            props.updateTrack(formData, props.track._id);
+        } else{
+            props.createTrack(formData);
+        }
     }
 
     return (
         <>
             <form onSubmit={handleSubmit}>
-                <label htmlFor="name">Title </label>
+                <label>Title </label>
                     <input
                         type='text'
                         name='title'
                         value={formData.title}
                         onChange={handleChange}
                     />
-                <label htmlFor="artist">Artist </label>
+                <label>Artist </label>
                     <input
                         type='text'
                         name='artist'
                         value={formData.artist}
                         onChange={handleChange}
                     />
-                <button>Submit</button>
+                <button type='submit'> {props.track ? 'Update' : 'Create'} Track</button>
             </form>
         </>
     );

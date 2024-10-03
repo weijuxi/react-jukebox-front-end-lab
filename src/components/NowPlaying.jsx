@@ -4,8 +4,10 @@ export default function NowPlaying(props) {
     return (
         <>
             <h2>Now Playing</h2>
-            <h2>{props.track.title} - {props.track.artist}</h2>
-            <button onClick={() => props.setSelected(null)}>Close</button>
+            <h3>{props.track.title} - {props.track.artist}</h3>
+            {/* <button onClick={() => props.setSelected(null)}>Close</button> */}
+            <button onClick={() => props.handleFormView(props.track)}>Edit</button>
+            <button onClick={() => props.deleteTrack(props.track._id)}>Delete</button>
         </>
     );
 }

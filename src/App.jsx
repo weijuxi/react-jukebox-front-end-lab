@@ -35,15 +35,46 @@ const App = () => {
     }
   } 
 
-  const toggleForm = () => {
+  const toggleForm = (track) => {
+    if (!track.name) {
+      setSelectedTrack(null);
+    }
     setOpenForm(!openForm);
   }
+
+  async function updateTrack(track, trackId) {
+    try {
+      const updatedTrack = await trackService.update(track, trackId);
+      const updatedTracks = tracks.map((track) => (track._id === updatedTrack._id ? updatedTrack : track));
+      setTracks(updatedTracks);
+      setSelectedTrack(updatedTrack);
+      setOpenForm(false);
+    } catch (error) {
+      console.error(error );
+    }
+  }
+
+  const deleteTrack = async (trackId) => {
+    try {
+      await trackService.deleteTrack(trackId);
+      const updatedTracks = tracks.filter((track) => track._id !== trackId);
+      setTracks(updatedTracks);
+      setSelectedTrack(null);
+      setOpenForm(false);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const updateSelectedTrack = (track) => {
+    setSelectedTrack(track);
+  };
 
 
   return (
     <>
-      <TrackList tracks={tracks} setSelected={setSelectedTrack} handleopenForm={toggleForm} isFormOpen={openForm} />
-      {openForm ? <TrackForm createTrack={createTrack} /> : <NowPlaying track={selectedTrack} setSelected={setSelectedTrack} />}
+      <TrackList tracks={tracks} updateSelectedTrack={updateSelectedTrack} handleopenForm={toggleForm} isFormOpen={openForm} />
+      {openForm ? <TrackForm createTrack={createTrack} updateTrack={updateTrack} track={selectedTrack} /> : <NowPlaying track={selectedTrack} setSelected={setSelectedTrack} handleFormView={toggleForm} deleteTrack={deleteTrack} />}
     </>
   );
 };
